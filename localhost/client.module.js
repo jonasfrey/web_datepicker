@@ -1,5 +1,31 @@
 import {f_o_html_from_o_js} from "https://deno.land/x/f_o_html_from_o_js@0.7/mod.js";
 
+let f_ensure_type = function(
+    value, 
+    type, 
+    s_var_name 
+){
+
+}
+let f_f_b_selectable__between_dates = function(
+    o_date_from, 
+    o_date_to
+){
+    if(o_date_from instanceof Date == false){
+        throw new Error('type error: `o_date_from` has to be instance of `Date`');
+    }
+    if(o_date_to instanceof Date == false){
+        throw new Error('type error');
+    }
+    return function(o_date){
+        console.log("o-date")
+        console.log(o_date)
+        return o_date.getTime() > o_date_from.getTime()
+        && o_date.getTime() < o_date_to.getTime()
+    }
+
+
+}
 class O_state{
     constructor(
         o_element_html,
@@ -83,7 +109,14 @@ let f_add_css = function(
 }
 
 
-
+let f_b_same_day = function(
+    o_date_1, 
+    o_date_2
+){
+    return o_date_1.getFullYear() == o_date_2.getFullYear()
+        && o_date_1.getMonth() == o_date_2.getMonth()
+        && o_date_1.getDate() == o_date_2.getDate()
+}
 
 let f_o_js__datepicker = function(
     o_state
@@ -138,19 +171,25 @@ let f_o_js__datepicker = function(
                         a_o: [
                             ...a_o_date_day.map(function(o_date_day){
                                 var b_selectable = o_state.f_b_selectable(o_date_day);
-                                
+                                var b_day_of_this_month = o_date_day.getMonth() == o_state._o_date__being_selected.getMonth();
                                 return {
                                     s_tag: 'a',
                                     href: '#',
-                                    role: 'button',
+                                    role: (b_day_of_this_month) ? 'button': '',
                                     class: [
                                         `w_1_t_7`,
-                                        `${(o_state._o_date__being_selected.getTime() == o_date_day.getTime() )? '': 'outline'}`,
-                                        `${(o_date_day.getMonth() != o_state._o_date__being_selected.getMonth())?'secondary': ''}`,
+                                        ...((b_day_of_this_month) ? ([
+                                            `${(f_b_same_day(o_date_day, o_state.o_date) )? '': 'outline'}`,
+                                            `${ b_selectable ? '': 'secondary'}`,
+                                        ]): []), 
                                     ].join(" "),
-                                    innerText: o_date_day.getDate(),//.toString().padStart(2,'0'), 
+                                    innerText: (b_day_of_this_month) ? o_date_day.getDate(): '',//.toString().padStart(2,'0'), 
                                     onclick: function(){
+                                        if(!b_day_of_this_month){
+                                            return
+                                        }
                                         o_state._o_date__being_selected = o_date_day;
+                                        
                                         o_js_a_s_name_day._f_render();
 
                                         if(b_selectable){
@@ -158,6 +197,7 @@ let f_o_js__datepicker = function(
                                             o_state.f_on_update__o_date();
                                         }
                                         o_state.f_on_click__o_date();
+                                        o_js_a_s_name_day._f_render()
                                         // console.log(o_date_day)
                                     }
                                 }
@@ -180,6 +220,7 @@ let f_o_js__datepicker = function(
                         function(s_name_month){
                             var n_idx_month = o_state.a_s_name_month.indexOf(s_name_month);
                             var o_date_month = new Date(new Date().setMonth(n_idx_month));
+                            var b_selectable = o_state.f_b_selectable(o_date_month);
 
                             return {
                                 s_tag: 'a',
@@ -189,8 +230,8 @@ let f_o_js__datepicker = function(
                                     `${(o_state._o_date__being_selected.getMonth() == o_date_month.getMonth() )? '': 'outline'}`,
                                     "s_name_month", 
                                     "clickable", 
-                                    'w_1_t_3'
-                                    
+                                    'w_1_t_3',
+                                    `${ b_selectable ? '': 'secondary'}`,
                                 ].join(' '),
                                 innerText: s_name_month,
                                 onclick: function(){
@@ -217,6 +258,10 @@ let f_o_js__datepicker = function(
                 a_o:[
                     ...o_state.a_n_year.map(
                         function(n_year){
+                            var b_selectable = o_state.f_b_selectable(
+                                new Date(n_year, 1, 1)
+                            );
+
                             return {
                                 s_tag: 'a',
                                 href: '#',
@@ -225,7 +270,9 @@ let f_o_js__datepicker = function(
                                     `${(o_state._o_date__being_selected.getFullYear() == n_year )? '': 'outline'}`,
                                     "n_year", 
                                     "clickable",
-                                    'w_1_t_3'
+                                    'w_1_t_3',
+                                    `${ b_selectable ? '': 'secondary'}`,
+
 
                                 ].join(' '),
                                 innerText: n_year,
@@ -378,5 +425,6 @@ let f_o_js__datepicker = function(
 export {
     f_o_js__datepicker, 
     f_s_version_suffix, 
-    O_state
+    O_state, 
+    f_f_b_selectable__between_dates
 }

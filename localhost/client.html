@@ -21,6 +21,8 @@
         <div id="datepicker">
 
         </div>
+        <div id="datepicker_from_to_example">
+        </div>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -28,7 +30,8 @@
         <script type="module" async defer>
             import {
                 f_o_js__datepicker, 
-                O_state
+                O_state, 
+                f_f_b_selectable__between_dates
             } from "./client.module.js"
 
             let o_div_target = document.querySelector("#datepicker");
@@ -41,11 +44,13 @@
                         console.log(this.o_date);
                     },//f_on_update__o_date
                     function(o_date){
+                        if(o_date instanceof Date == false){
+                            return false
+                        }
                         let n_days = 10;
-                        return 
-                            o_date.getTime() < (new Date().getTime() + 24*60*60*1000*n_days)
-                            &&
-                            o_date.getTime() > (new Date().getTime() - 24*60*60*1000*n_days)
+                        // console.log(o_date)
+                        return o_date.getTime() < (new Date().getTime() + 24*60*60*1000*n_days)
+                            && o_date.getTime() > (new Date().getTime() - 24*60*60*1000*n_days)
 
                     },
                     function(o_date){
@@ -56,7 +61,26 @@
                     //f_on_click__o_date = function(){return true},
                 )
             );
-            console.log(o_js__datepicker)
+
+            let o_date = new Date(); 
+            let n_days = 10;
+            let o_date_plus_n_days = new Date(new Date().getTime() + 24*60*60*1000*n_days);
+            let o_date_minus_n_days = new Date(new Date().getTime() - 24*60*60*1000*n_days);
+            let o_js__datepicker_2 = f_o_js__datepicker(
+                new O_state(
+                    document.querySelector("#datepicker_from_to_example"),//o_element_html,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    f_f_b_selectable__between_dates(
+                        o_date_minus_n_days, 
+                        o_date_plus_n_days
+                    )
+                )
+            );
+
         </script>
 
     </body>
