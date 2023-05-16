@@ -1,34 +1,6 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>test</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-
-    </head>
-    <body>
-        <h1 class="text-3xl font-bold underline">
-            Test title example of page
-          </h1>
-          <button s_tag="button" class="btn btn-blue" innertext="click">button from other html</button>
-        <div id="datepicker">
-
-        </div>
-        <div id="datepicker_from_to_example">
-        </div>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <script type="module" async defer>
-//./readme.md:start
-//md: # import lib
+<!-- {"s_msg":"this file was automatically generated","s_by":"f_generate_markdown.module.js","s_ts_created":"Tue May 16 2023 15:21:25 GMT+0200 (Central European Summer Time)","n_ts_created":1684243285359} -->
+# import lib
+```javascript
             import {
                 f_o_js__datepicker, 
                 O_state, 
@@ -36,7 +8,9 @@
             } from "./client.module.js"
             // } from "https://deno.land/x/web_datepicker@[version]/mod.js"
 
-//md: # create a datepicker
+```
+# create a datepicker
+```javascript
             let o_div_target = document.querySelector("#datepicker");
             let f_on_update__o_date = function(
                 o_date
@@ -73,7 +47,9 @@
                     f_on_click__o_date
                 )
             );
-//md: # create a with a helper function that limits the selectable dates by a start and an end date 
+```
+# create a with a helper function that limits the selectable dates by a start and an end date
+```javascript
 
             let o_date = new Date(); 
             let n_days = 10;
@@ -93,7 +69,9 @@
                     )
                 )
             );
-//md: # every date with even day number is selectable 
+```
+# every date with even day number is selectable
+```javascript
 
             var o_div = document.createElement("div");
             document.body.appendChild(o_div)
@@ -110,9 +88,4 @@
                     }
                 )
             );
-//./readme.md:end
-
-        </script>
-
-    </body>
-</html>
+```
