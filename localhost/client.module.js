@@ -97,7 +97,7 @@ var f_s_ymd_from_n_ts_ms = function(
     n_ts_ms,
     b_localtime = false
 ){
-
+    
     var o_date  = new Date(n_ts_ms);
 
     var s_y = o_date.getUTCFullYear();
@@ -195,7 +195,8 @@ let f_o_js__datepicker = function(
                         class: "clickable",
                         type: "text",
                         value:  f_s_ymd_from_n_ts_ms(
-                            o_state.o_date.getTime()
+                            o_state.o_date.getTime(), 
+                            true
                         ), 
                         onmousedown: function(){
                             o_state.b_show_picker = true
@@ -297,6 +298,8 @@ let f_o_js__datepicker = function(
                                         );
                                         o_js_a_s_name_day._f_render()
                                         o_js_input._f_render();
+                                        o_state.b_show_picker = false;
+                                        o_js_s_name_month_n_year._f_render();
                                     }
                                 }
                             })
