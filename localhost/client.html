@@ -110,6 +110,69 @@
                     }
                 )
             );
+//md: # the selectable dates can be limited by the arguments `n_ts_ms__from` and `n_ts_ms__to` 
+
+var o_div = document.createElement("div");
+            document.body.appendChild(o_div)
+            let o_js__datepicker_4 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    new Date().getTime()-24*60*60*1000*7,//n_ts_ms__from
+                    new Date().getTime()+24*60*60*1000*7//n_ts_ms__to
+                )
+            );
+
+//md: # example: only dates from the past
+
+var o_div = document.createElement("div");
+            document.body.appendChild(o_div)
+            let o_js__datepicker_5 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    0,//n_ts_ms__from
+                    new Date().getTime()//n_ts_ms__to
+                )
+            );
+
+//md: # example: only dates in the future
+
+var o_div = document.createElement("div");
+            document.body.appendChild(o_div)
+            let o_js__datepicker_6 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    new Date().getTime(),//n_ts_ms__from, 
+                    new Date().getTime()+24*60*60*1000*(100000)//n_ts_ms__to
+                )
+            );
+            
 //./readme.md:end
 
         </script>

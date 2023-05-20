@@ -36,8 +36,10 @@ class O_state{
         o_element_html,
         o_date = new Date(),
         f_on_update__o_date = function(){},
-        f_b_selectable = function(){},
+        f_b_selectable = function(){return true},
         f_on_click__o_date = function(){return true},
+        n_ts_ms__from = null, 
+        n_ts_ms__to = null, 
     ){
         if(o_element_html instanceof HTMLElement == false){
             throw new Error('type error');
@@ -61,6 +63,9 @@ class O_state{
         this.f_b_selectable = f_b_selectable
         this.f_on_click__o_date = f_on_click__o_date
         
+        this.n_ts_ms__from = n_ts_ms__from
+        this.n_ts_ms__to = n_ts_ms__to
+
         this._o_date__being_selected = new Date(this.o_date.getTime());
 
         this.b_show_picker = false;
@@ -266,7 +271,9 @@ let f_o_js__datepicker = function(
                         ].join(" "),
                         a_o: [
                             ...a_o_date_day.map(function(o_date_day){
-                                var b_selectable = o_state.f_b_selectable(o_date_day);
+                                var b_selectable = 
+                                    o_state.f_b_selectable(o_date_day)
+                                    && f_b_selectable__from__from_to(o_date_day, 'day');
                                 var b_day_of_this_month = o_date_day.getMonth() == o_state._o_date__being_selected.getMonth();
                                 let b_same_day = f_b_same_day(o_date_day, o_state.o_date);
                                 let b_clickable = b_day_of_this_month && b_selectable;
@@ -312,6 +319,24 @@ let f_o_js__datepicker = function(
             // console.log(o_date_end)
         }
     };
+    let f_b_selectable__from__from_to = function(o_date, s_type){
+        let o_date__from = new Date(o_state.n_ts_ms__from);
+        let o_date__to = new Date(o_state.n_ts_ms__to);
+        if(
+            o_date__from instanceof Date 
+            && o_date__to instanceof Date
+        ){
+            if(s_type == 'year'){
+                return o_date.getFullYear() >= o_date__from.getFullYear()
+                     && o_date.getFullYear() <= o_date__to.getFullYear()
+            }
+            if(s_type == 'day' || s_type == 'month'){
+                return o_date.getTime() >= o_date__from.getTime()
+                     && o_date.getTime() <= o_date__to.getTime()
+            }
+        }
+        return true;
+    }
     let o_js_a_s_name_month = {
         f_o_js: function(){
             return {
@@ -320,9 +345,10 @@ let f_o_js__datepicker = function(
                     ...o_state.a_s_name_month.map(
                         function(s_name_month){
                             var n_idx_month = o_state.a_s_name_month.indexOf(s_name_month);
-                            var o_date_month = new Date(new Date().setMonth(n_idx_month));
-
-                            var b_selectable = true;//we would need to check every day of month if it is selectable, if even one day is selectable the whole month is selectable //o_state.f_b_selectable(o_date_month);
+                            var o_date_month = new Date(o_state._o_date__being_selected.setMonth(n_idx_month));
+                            
+                            var b_selectable = f_b_selectable__from__from_to(o_date_month, "month");//we would need to check every day of month if it is selectable, if even one day is selectable the whole month is selectable //o_state.f_b_selectable(o_date_month);
+                            
                             let b_same_month = o_state.o_date.getMonth() == o_date_month.getMonth();
                             let b_clickable = b_selectable;
                             let b_clicked = b_same_month;
@@ -362,7 +388,9 @@ let f_o_js__datepicker = function(
                     ...o_state.a_n_year.map(
                         function(n_year){
                             
-                            var b_selectable = true;//n_year == o_state.o_date.getFullYear()
+                            var o_date_year = new Date(o_state._o_date__being_selected.setFullYear(n_year));
+
+                            var b_selectable = f_b_selectable__from__from_to(o_date_year, 'year');
                             //we would need to check if the date is selectable for every day in the year to know if a year is selectable/clickable
 
                             let b_clickable = b_selectable;
