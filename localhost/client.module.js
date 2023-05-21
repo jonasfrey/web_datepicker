@@ -66,6 +66,7 @@ class O_state{
         this.n_ts_ms__from = n_ts_ms__from
         this.n_ts_ms__to = n_ts_ms__to
 
+
         this._o_date__being_selected = new Date(this.o_date.getTime());
 
         this.b_show_picker = false;
@@ -85,7 +86,6 @@ class O_state{
         }
         this.a_n_year.sort((n1, n2)=>n1-n2)
         // console.log(this.a_n_year)
-
 
     }
 }
@@ -271,9 +271,10 @@ let f_o_js__datepicker = function(
                         ].join(" "),
                         a_o: [
                             ...a_o_date_day.map(function(o_date_day){
-                                var b_selectable = 
-                                    o_state.f_b_selectable(o_date_day)
-                                    && f_b_selectable__from__from_to(o_date_day, 'day');
+                                var b_selectable__from_function = o_state.f_b_selectable(o_date_day)
+                                let b_selectable__from_from_to = f_b_selectable__from__from_to(o_date_day, 'day');
+                                
+                                let b_selectable = b_selectable__from_function && b_selectable__from_from_to;
                                 var b_day_of_this_month = o_date_day.getMonth() == o_state._o_date__being_selected.getMonth();
                                 let b_same_day = f_b_same_day(o_date_day, o_state.o_date);
                                 let b_clickable = b_day_of_this_month && b_selectable;
@@ -291,6 +292,7 @@ let f_o_js__datepicker = function(
                                         if(!b_day_of_this_month){
                                             return
                                         }
+
                                         o_state._o_date__being_selected = o_date_day;
                                         
                                         o_js_a_s_name_day._f_render();
@@ -298,15 +300,15 @@ let f_o_js__datepicker = function(
                                             o_state.o_date = o_date_day
                                             o_state.f_on_update__o_date(
                                                 o_state.o_date
-                                            );
+                                                );
+                                            o_state.b_show_picker = false;
+                                            o_js_s_name_month_n_year._f_render();
                                         }
                                         o_state.f_on_click__o_date(
                                             o_date_day
                                         );
                                         o_js_a_s_name_day._f_render()
                                         o_js_input._f_render();
-                                        o_state.b_show_picker = false;
-                                        o_js_s_name_month_n_year._f_render();
                                     }
                                 }
                             })
@@ -319,20 +321,39 @@ let f_o_js__datepicker = function(
             // console.log(o_date_end)
         }
     };
+    let f_o_date__first_of_month = function(o_date){
+        let o_d = new Date(o_date.getTime());
+        o_d.setDate(1);
+        o_d.setHours(0);
+        o_d.setMinutes(1);
+        o_d.setSeconds(1);
+        return o_d;
+    }
     let f_b_selectable__from__from_to = function(o_date, s_type){
-        let o_date__from = new Date(o_state.n_ts_ms__from);
-        let o_date__to = new Date(o_state.n_ts_ms__to);
+        console.log(o_date)        
         if(
-            o_date__from instanceof Date 
-            && o_date__to instanceof Date
+            o_state.n_ts_ms__from != null 
+            && o_state.n_ts_ms__to != null
         ){
-            if(s_type == 'year'){
-                return o_date.getFullYear() >= o_date__from.getFullYear()
+
+            let o_date__from = new Date(o_state.n_ts_ms__from);
+            let o_date__to = new Date(o_state.n_ts_ms__to);
+            let b_year = o_date.getFullYear() >= o_date__from.getFullYear()
                      && o_date.getFullYear() <= o_date__to.getFullYear()
+            if(s_type == 'year'){
+                return b_year;
             }
-            if(s_type == 'day' || s_type == 'month'){
-                return o_date.getTime() >= o_date__from.getTime()
+            let b_day =  o_date.getTime() >= o_date__from.getTime()
                      && o_date.getTime() <= o_date__to.getTime()
+            if(s_type == 'day'){
+                return b_day;
+            }
+            if(s_type == 'month'){
+                var o_d__from = f_o_date__first_of_month(o_date__from);
+                var o_d__to = f_o_date__first_of_month(o_date__to);
+                var o_d = f_o_date__first_of_month(o_date);
+                return o_d.getTime() >= o_d__from.getTime()
+                && o_d.getTime() <= o_d__to.getTime()
             }
         }
         return true;
@@ -345,8 +366,8 @@ let f_o_js__datepicker = function(
                     ...o_state.a_s_name_month.map(
                         function(s_name_month){
                             var n_idx_month = o_state.a_s_name_month.indexOf(s_name_month);
-                            var o_date_month = new Date(o_state._o_date__being_selected.setMonth(n_idx_month));
-                            
+                            var o_date_month = new Date(o_state._o_date__being_selected.getTime());
+                            o_date_month.setMonth(n_idx_month);
                             var b_selectable = f_b_selectable__from__from_to(o_date_month, "month");//we would need to check every day of month if it is selectable, if even one day is selectable the whole month is selectable //o_state.f_b_selectable(o_date_month);
                             
                             let b_same_month = o_state.o_date.getMonth() == o_date_month.getMonth();
@@ -388,8 +409,8 @@ let f_o_js__datepicker = function(
                     ...o_state.a_n_year.map(
                         function(n_year){
                             
-                            var o_date_year = new Date(o_state._o_date__being_selected.setFullYear(n_year));
-
+                            var o_date_year = new Date(o_state._o_date__being_selected.getTime());
+                            o_date_year.setFullYear(n_year)
                             var b_selectable = f_b_selectable__from__from_to(o_date_year, 'year');
                             //we would need to check if the date is selectable for every day in the year to know if a year is selectable/clickable
 
@@ -408,6 +429,7 @@ let f_o_js__datepicker = function(
                                 ].join(' '),
                                 innerText: n_year,
                                 onclick: function(){
+
                                     o_state._o_date__being_selected = new Date(
                                         o_state._o_date__being_selected.setFullYear(n_year)
                                     );
@@ -422,6 +444,7 @@ let f_o_js__datepicker = function(
             }
         }
     }
+
     o_js_active = o_js_a_s_name_day;
     o_js_s_name_month_n_year = {
         f_o_js:function(){
@@ -441,11 +464,8 @@ let f_o_js__datepicker = function(
                                         ].join(' '),
                                         innerText: "<", 
                                         onclick: function(){
-                                            o_state._o_date__being_selected = new Date(
-                                                o_state._o_date__being_selected.setMonth(
-                                                    o_state._o_date__being_selected.getMonth()-1
-                                                )
-                                            );
+                                            let n_idx_month = o_state._o_date__being_selected.getMonth()-1;
+                                            o_state._o_date__being_selected.setMonth(n_idx_month)
                                             o_js_s_name_month_n_year._f_render()
                                         }
                                     },
@@ -460,8 +480,6 @@ let f_o_js__datepicker = function(
                                             //switch to monmth view
                                             o_js_active = o_js_a_s_name_month
                                             o_js_s_name_month_n_year._f_render()
-                 
-                
                                         }
                                     },
                                     {
@@ -471,11 +489,8 @@ let f_o_js__datepicker = function(
                                         ].join(' '),
                                         innerText: ">", 
                                         onclick: function(){
-                                            o_state._o_date__being_selected = new Date(
-                                                o_state._o_date__being_selected.setMonth(
-                                                    o_state._o_date__being_selected.getMonth()+1
-                                                )
-                                            );
+                                            let n_idx_month = o_state._o_date__being_selected.getMonth()+1;
+                                            o_state._o_date__being_selected.setMonth(n_idx_month)
                                             o_js_s_name_month_n_year._f_render()
                                         }
                                     },
