@@ -23,8 +23,6 @@ let f_f_b_selectable__between_dates = function(
         throw new Error('type error');
     }
     return function(o_date){
-        // console.log("o-date")
-        // console.log(o_date)
         return o_date.getTime() > o_date_from.getTime()
         && o_date.getTime() < o_date_to.getTime()
     }
@@ -85,7 +83,6 @@ class O_state{
             )
         }
         this.a_n_year.sort((n1, n2)=>n1-n2)
-        // console.log(this.a_n_year)
 
     }
 }
@@ -166,7 +163,6 @@ let f_o_js__datepicker = function(
                     //         if(window.event.key == "ArrowUp"){
                     //             n +=1;
                     //         }
-                    //         console.log(n)
                     //         if(n.toString().length == 1){
                     //             n = n.toString().padStart(2, '0')
                     //         }
@@ -197,7 +193,7 @@ let f_o_js__datepicker = function(
                     {
                         s_tag: "input", 
                         readonly: 'true',
-                        class: "clickable",
+                        class: "clickable p-1_2_rem",
                         type: "text",
                         value:  f_s_ymd_from_n_ts_ms(
                             o_state.o_date.getTime(), 
@@ -210,7 +206,7 @@ let f_o_js__datepicker = function(
                     },
                     {
                         s_tag: 'i',
-                        class: "fa-regular fa-calendar icon clickable", 
+                        class: "fa-regular fa-calendar icon clickable p-1_2_rem", 
                         onmouseup: function(){
                             o_state.b_show_picker = !o_state.b_show_picker
                             o_js_s_name_month_n_year._f_render();
@@ -297,7 +293,7 @@ let f_o_js__datepicker = function(
                                         
                                         o_js_a_s_name_day._f_render();
                                         if(b_selectable){
-                                            o_state.o_date = o_date_day
+                                            o_state.o_date = new Date(o_date_day.getTime())
                                             o_state.f_on_update__o_date(
                                                 o_state.o_date
                                                 );
@@ -317,8 +313,6 @@ let f_o_js__datepicker = function(
                 ]
             }
 
-            // console.log(o_date_start)
-            // console.log(o_date_end)
         }
     };
     let f_o_date__first_of_month = function(o_date){
@@ -330,7 +324,6 @@ let f_o_js__datepicker = function(
         return o_d;
     }
     let f_b_selectable__from__from_to = function(o_date, s_type){
-        console.log(o_date)        
         if(
             o_state.n_ts_ms__from != null 
             && o_state.n_ts_ms__to != null
@@ -415,7 +408,7 @@ let f_o_js__datepicker = function(
                             //we would need to check if the date is selectable for every day in the year to know if a year is selectable/clickable
 
                             let b_clickable = b_selectable;
-                            let b_clicked = false;
+                            let b_clicked = o_date_year.getFullYear() == o_state._o_date__being_selected.getFullYear();
 
                             return {
                                 class: [
@@ -518,7 +511,6 @@ let f_o_js__datepicker = function(
     }
 
     let o = {
-        class: s_version_class,
         a_o:[
             o_js_input,
             o_js_s_name_month_n_year,
@@ -535,6 +527,8 @@ let f_o_js__datepicker = function(
         }
     }
     var o_html = f_o_html_from_o_js(o);
+    o_state.o_element_html.classList.add(s_version_class);
+    o_html.className = o_state.o_element_html.className;
     o_state.o_element_html.appendChild(o_html);
     // var o_iframe = document.createElement("iframe");
     // o_state.o_element_html.appendChild(o_iframe)
@@ -545,7 +539,20 @@ let f_o_js__datepicker = function(
     let s_color_clickable = 'rgb(241,243,244)'
     let s_color_clicked_clickable = 'rgb(138,180,248)';
     
+    let s_color_clicked__dark = 'rgb(126,180,201)'
+    let s_color_clickable__dark = '#282828'
+    let s_color_clicked_clickable__dark = '#4d4d4d';
+    
     let s_css = `
+            input{
+                border:none;
+                outline:none;
+                flex: 1 1 auto;
+            }
+            .input{
+                display:flex;
+            }
+
             .d_flex{
                 display: flex;
                 flex-wrap: wrap;
@@ -565,28 +572,57 @@ let f_o_js__datepicker = function(
                 flex:1 1 calc(100%/3);
             }
             *{
+                font-size: 1.2rem;
                 color: rgb(25 25 25 / 50%);
             }
             ${['clickable'].map(
                 s=>`
                 .${s}{
                     border-radius:3px;
-                    color: rgb(12 12 12 / 90%)
+                    color: rgb(18 18 18 / 90%)
                 }
                 .${s}:hover{
                     background-color: ${s_color_clickable};
                     cursor:pointer;
-                    color: rgb(12 12 12 / 90%)
+                    color: rgb(18 18 18 / 90%)
                 }
                 .${s}.clicked{
                     background-color: ${s_color_clicked};
                     cursor:pointer;
-                    color: rgb(12 12 12 / 90%)
+                    color: rgb(18 18 18 / 90%)
                 }
                 .${s}.clicked:hover{
                     background-color: ${s_color_clicked_clickable};
                     cursor:pointer;
-                    color: rgb(12 12 12 / 90%)
+                    color: rgb(18 18 18 / 90%)
+                }
+                `
+            ).join('\n')}
+            .theme_dark * {
+                background: rgba(18,18,18, 1.0);
+                color: rgba(143, 143, 143, 1.0);
+            }
+            ${['.theme_dark .clickable'].map(
+                s=>`
+                ${s}{
+
+                    border-radius:3px;
+                    color: rgb(243 243 243 / 90%);
+                }
+                ${s}:hover{
+                    background-color: ${s_color_clickable__dark};
+                    cursor:pointer;
+                    color: rgb(243 243 243 / 90%);
+                }
+                ${s}.clicked{
+                    background-color: ${s_color_clicked__dark};
+                    cursor:pointer;
+                    color: rgb(243 243 243 / 90%);
+                }
+                ${s}.clicked:hover{
+                    background-color: ${s_color_clicked_clickable__dark};
+                    cursor:pointer;
+                    color: rgb(243 243 243 / 90%);
                 }
                 `
             ).join('\n')}
