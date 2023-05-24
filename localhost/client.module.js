@@ -67,6 +67,8 @@ class O_state{
 
         this._o_date__being_selected = new Date(this.o_date.getTime());
 
+        this.s_poor_unique_id = `poor_uuid_${new Date().getTime()}_${parseInt(Math.random()*1000)}_${window.performance.now().toString().replace(".", "_")}`;
+
         this.b_show_picker = false;
         this.a_s_name_month = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
         this.n_selectable_years_plus_minus = 10;
@@ -207,8 +209,9 @@ let f_o_js__datepicker = function(
                     {
                         s_tag: 'i',
                         class: "fa-regular fa-calendar icon clickable p-1_2_rem", 
-                        onmouseup: function(){
-                            o_state.b_show_picker = !o_state.b_show_picker
+                        onmouseup: function () {
+                            
+                            o_state.b_show_picker = true;
                             o_js_s_name_month_n_year._f_render();
                         }
                     }
@@ -442,13 +445,13 @@ let f_o_js__datepicker = function(
     o_js_s_name_month_n_year = {
         f_o_js:function(){
             return {
-                class:  "o_js_s_name_month_n_year",
+                class:  "o_js_s_name_month_n_year border_shadow_popup",
                 a_o: [
                     {
                         b_render: o_state.b_show_picker,
                         a_o:[
                             {
-                                class: "nav", 
+                                class: "o_js_s_name_month_n_year_nav", 
                                 a_o:[
                                     {
                                         class: [
@@ -511,24 +514,28 @@ let f_o_js__datepicker = function(
     }
 
     let o = {
+        class: "position_relative",
         a_o:[
             o_js_input,
             o_js_s_name_month_n_year,
         ], 
         onmouseup: function(){
-            o_state.n_ts_tmp = window.performance.now();
+            o_state.b_show_picker = true;
+
         }
     };
-    window.onmouseup = function(){
-        let b_close = (window.performance.now() - o_state.n_ts_tmp) > 200;
-        if(b_close){
+    window.addEventListener("mouseup", function(){
+        let o = (window.event.target.closest("."+o_state.s_poor_unique_id));
+        if(!o){
             o_state.b_show_picker = false;
-            o_js_s_name_month_n_year._f_render();
+            o_js_s_name_month_n_year._f_render();    
         }
-    }
+    })
     var o_html = f_o_html_from_o_js(o);
+
     o_state.o_element_html.classList.add(s_version_class);
-    o_html.className = o_state.o_element_html.className;
+    o_state.o_element_html.classList.add(o_state.s_poor_unique_id);
+    o_html.classList = [...o_html.classList, ...o_state.o_element_html.classList].join(' ');
     o_state.o_element_html.appendChild(o_html);
     // var o_iframe = document.createElement("iframe");
     // o_state.o_element_html.appendChild(o_iframe)
@@ -544,6 +551,15 @@ let f_o_js__datepicker = function(
     let s_color_clicked_clickable__dark = '#4d4d4d';
     
     let s_css = `
+            .position_relative{
+                position:relative
+            }
+            .o_js_s_name_month_n_year{
+                position:absolute;
+                top:100%;
+                left:0;
+                width:100%;
+            }
             input{
                 border:none;
                 outline:none;
@@ -574,6 +590,13 @@ let f_o_js__datepicker = function(
             *{
                 font-size: 1.2rem;
                 color: rgb(25 25 25 / 50%);
+                background:white;
+            }
+            .border_shadow_popup{
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            }
+            .theme_dark .border_shadow_popup{
+                box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
             }
             ${['clickable'].map(
                 s=>`
@@ -641,11 +664,14 @@ let f_o_js__datepicker = function(
                         .pb-${s_n}_rem{padding-bottom: ${num}rem}
                     `
                 }
-            ).join("\n")} , 
+            ).join("\n")} 
             .o_js_s_name_month_n_year{
-                max-width:500px
+                z-index:1;
             }
-            .nav{
+            .o_js_s_name_month_n_year{
+                max-width:500px;
+            }
+            .o_js_s_name_month_n_year_nav{
                 display:flex;
             }
     `;
