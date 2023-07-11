@@ -1,4 +1,4 @@
-<!-- {"s_msg":"this file was automatically generated","s_by":"f_generate_markdown.module.js","s_ts_created":"Tue May 16 2023 15:21:25 GMT+0200 (Central European Summer Time)","n_ts_created":1684243285359} -->
+<!-- {"s_msg":"this file was automatically generated","s_by":"f_generate_markdown.module.js","s_ts_created":"Wed May 24 2023 14:50:09 GMT+0200 (Central European Summer Time)","n_ts_created":1684932609498} -->
 # import lib
 ```javascript
             import {
@@ -51,7 +51,8 @@
 # create a with a helper function that limits the selectable dates by a start and an end date
 ```javascript
 
-            let o_date = new Date(); 
+            let o_date = new Date();
+            o_date.setDate(o_date.getDate()+1); 
             let n_days = 10;
             let o_date_plus_n_days = new Date(new Date().getTime() + 24*60*60*1000*n_days);
             let o_date_minus_n_days = new Date(new Date().getTime() - 24*60*60*1000*n_days);
@@ -88,4 +89,97 @@
                     }
                 )
             );
+```
+# the selectable dates can be limited by the arguments `n_ts_ms__from` and `n_ts_ms__to`
+```javascript
+
+var o_div = document.createElement("div");
+            document.body.appendChild(o_div)
+            let o_js__datepicker_4 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    new Date().getTime()-24*60*60*1000*7,//n_ts_ms__from
+                    new Date().getTime()+24*60*60*1000*7//n_ts_ms__to
+                )
+            );
+
+```
+# example: only dates from the past
+```javascript
+
+var o_div = document.createElement("div");
+            document.body.appendChild(o_div)
+            let o_js__datepicker_5 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    0,//n_ts_ms__from
+                    new Date().getTime()//n_ts_ms__to
+                )
+            );
+
+```
+# example: only dates in the future
+```javascript
+
+var o_div = document.createElement("div");
+            document.body.appendChild(o_div)
+            let o_js__datepicker_6 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    new Date().getTime(),//n_ts_ms__from, 
+                    new Date().getTime()+24*60*60*1000*(100000)//n_ts_ms__to
+                )
+            );
+            
+```
+# example: dark theme
+```javascript
+
+var o_div = document.createElement("div");
+o_div.className = 'theme_dark';
+document.body.appendChild(o_div)
+            let o_js__datepicker_7 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    new Date().getTime(),//n_ts_ms__from, 
+                    new Date().getTime()+24*60*60*1000*(100000)//n_ts_ms__to
+                )
+            );
+            
 ```
