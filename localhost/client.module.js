@@ -282,16 +282,8 @@ let f_o_js__datepicker = function(
                         ].join(" "),
                         a_o: [
                             ...a_o_date_day.map(function(o_date_day){
-<<<<<<< HEAD
                                 var b_selectable = o_state.f_b_selectable(o_date_day);
                                 var b_day_of_this_month = o_date_day.getUTCMonth() == o_state._o_date__being_selected.getUTCMonth();
-=======
-                                var b_selectable__from_function = o_state.f_b_selectable(o_date_day)
-                                let b_selectable__from_from_to = f_b_selectable__from__from_to(o_date_day, 'day');
-                                
-                                let b_selectable = b_selectable__from_function && b_selectable__from_from_to;
-                                var b_day_of_this_month = o_date_day.getMonth() == o_state._o_date__being_selected.getMonth();
->>>>>>> 8829e1e17d1a80957277e7c85768d5b51df6fb16
                                 let b_same_day = f_b_same_day(o_date_day, o_state.o_date);
                                 let b_clickable = b_day_of_this_month && b_selectable;
                                 let b_clicked = b_same_day;
@@ -379,18 +371,10 @@ let f_o_js__datepicker = function(
                     ...o_state.a_s_name_month.map(
                         function(s_name_month){
                             var n_idx_month = o_state.a_s_name_month.indexOf(s_name_month);
-<<<<<<< HEAD
                             var o_date_month = new Date(new Date().setUTCMonth(n_idx_month));
 
                             var b_selectable = true;//we would need to check every day of month if it is selectable, if even one day is selectable the whole month is selectable //o_state.f_b_selectable(o_date_month);
                             let b_same_month = o_state.o_date.getUTCMonth() == o_date_month.getUTCMonth();
-=======
-                            var o_date_month = new Date(o_state._o_date__being_selected.getTime());
-                            o_date_month.setMonth(n_idx_month);
-                            var b_selectable = f_b_selectable__from__from_to(o_date_month, "month");//we would need to check every day of month if it is selectable, if even one day is selectable the whole month is selectable //o_state.f_b_selectable(o_date_month);
-                            
-                            let b_same_month = o_state.o_date.getMonth() == o_date_month.getMonth();
->>>>>>> 8829e1e17d1a80957277e7c85768d5b51df6fb16
                             let b_clickable = b_selectable;
                             let b_clicked = b_same_month;
 
@@ -429,13 +413,7 @@ let f_o_js__datepicker = function(
                     ...o_state.a_n_year.map(
                         function(n_year){
                             
-<<<<<<< HEAD
                             var b_selectable = true;//n_year == o_state.o_date.getUTCFullYear()
-=======
-                            var o_date_year = new Date(o_state._o_date__being_selected.getTime());
-                            o_date_year.setFullYear(n_year)
-                            var b_selectable = f_b_selectable__from__from_to(o_date_year, 'year');
->>>>>>> 8829e1e17d1a80957277e7c85768d5b51df6fb16
                             //we would need to check if the date is selectable for every day in the year to know if a year is selectable/clickable
 
                             let b_clickable = b_selectable;
@@ -488,16 +466,11 @@ let f_o_js__datepicker = function(
                                         ].join(' '),
                                         innerText: "<", 
                                         onclick: function(){
-<<<<<<< HEAD
                                             o_state._o_date__being_selected = new Date(
                                                 o_state._o_date__being_selected.setUTCMonth(
                                                     o_state._o_date__being_selected.getUTCMonth()-1
                                                 )
                                             );
-=======
-                                            let n_idx_month = o_state._o_date__being_selected.getMonth()-1;
-                                            o_state._o_date__being_selected.setMonth(n_idx_month)
->>>>>>> 8829e1e17d1a80957277e7c85768d5b51df6fb16
                                             o_js_s_name_month_n_year._f_render()
                                         }
                                     },
@@ -521,16 +494,11 @@ let f_o_js__datepicker = function(
                                         ].join(' '),
                                         innerText: ">", 
                                         onclick: function(){
-<<<<<<< HEAD
                                             o_state._o_date__being_selected = new Date(
                                                 o_state._o_date__being_selected.setUTCMonth(
                                                     o_state._o_date__being_selected.getUTCMonth()+1
                                                 )
                                             );
-=======
-                                            let n_idx_month = o_state._o_date__being_selected.getMonth()+1;
-                                            o_state._o_date__being_selected.setMonth(n_idx_month)
->>>>>>> 8829e1e17d1a80957277e7c85768d5b51df6fb16
                                             o_js_s_name_month_n_year._f_render()
                                         }
                                     },
