@@ -28,6 +28,9 @@
         <![endif]-->
         <script type="module" async defer>
 //./readme.md:start
+import {
+    f_s_ymd_hms__from_n_ts_ms_utc
+} from "https://deno.land/x/date_functions@0.9/mod.js"
 //md: # import lib
             import {
                 f_o_js__datepicker, 
@@ -41,10 +44,11 @@
             let f_on_update__o_date = function(
                 o_date
                 ){
+                console.log(f_s_ymd_hms__from_n_ts_ms_utc(this.o_date.getTime(), 'UTC'))
                 // this function is called when the date has been updated
                 console.log("a new date has been selected!")
-                        console.log(this.o_date);// date is in 'this'
-                        console.log(o_date)//date is also first argument of functiond
+                console.log(this.o_date);// date is in 'this'
+                console.log(o_date)//date is also first argument of functiond
             }
             let f_b_selectable__date = function(
                 o_date

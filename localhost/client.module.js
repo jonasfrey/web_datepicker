@@ -69,13 +69,13 @@ class O_state{
         this.a_n_year = [];
         let o_date_minus = new Date(this.o_date.getTime());
         let o_date_plus = new Date(this.o_date.getTime());
-        this.a_n_year.push(this.o_date.getFullYear())
+        this.a_n_year.push(this.o_date.getUTCFullYear())
         for(var n_it = 0; n_it < this.n_selectable_years_plus_minus; n_it+=1){
-            o_date_minus = new Date( o_date_minus.setYear(o_date_minus.getFullYear()-1))
-            o_date_plus = new Date( o_date_plus.setYear(o_date_plus.getFullYear()+1))
+            o_date_minus = new Date( o_date_minus.setUTCFullYear(o_date_minus.getUTCFullYear()-1))
+            o_date_plus = new Date( o_date_plus.setUTCFullYear(o_date_plus.getUTCFullYear()+1))
             this.a_n_year.push(
-                o_date_minus.getFullYear(), 
-                o_date_plus.getFullYear()
+                o_date_minus.getUTCFullYear(), 
+                o_date_plus.getUTCFullYear()
             )
         }
         this.a_n_year.sort((n1, n2)=>n1-n2)
@@ -104,9 +104,9 @@ var f_s_ymd_from_n_ts_ms = function(
     var s_m = (o_date.getUTCMonth()+1).toString().padStart(2,'0');
     var s_d = (o_date.getUTCDate()).toString().padStart(2,'0');
     if(b_localtime){
-        s_y = o_date.getFullYear();
-        s_m = (o_date.getMonth()+1).toString().padStart(2,'0');
-        s_d = (o_date.getDate()).toString().padStart(2,'0');
+        s_y = o_date.getUTCFullYear();
+        s_m = (o_date.getUTCMonth()+1).toString().padStart(2,'0');
+        s_d = (o_date.getUTCDate()).toString().padStart(2,'0');
     }
     var s_ymd = `${s_y}-${s_m}-${s_d}`;
 
@@ -118,9 +118,9 @@ let f_b_same_day = function(
     o_date_1, 
     o_date_2
 ){
-    return o_date_1.getFullYear() == o_date_2.getFullYear()
-        && o_date_1.getMonth() == o_date_2.getMonth()
-        && o_date_1.getDate() == o_date_2.getDate()
+    return o_date_1.getUTCFullYear() == o_date_2.getUTCFullYear()
+        && o_date_1.getUTCMonth() == o_date_2.getUTCMonth()
+        && o_date_1.getUTCDate() == o_date_2.getUTCDate()
 }
 
 let f_o_js__datepicker = function(
@@ -217,16 +217,28 @@ let f_o_js__datepicker = function(
     let o_js_a_s_name_day = {
         f_o_js: function(){
             var o_date = o_state._o_date__being_selected;
-            var o_date_last_day_of_month = new Date(o_date.getFullYear(), o_date.getMonth()+1, 0);
-            var o_date_first_day_of_month = new Date(o_date.getFullYear(), o_date.getMonth(), 1);
+            var o_date_last_day_of_month = new Date(
+                Date.UTC(
+                    o_date.getUTCFullYear(),
+                    o_date.getUTCMonth()+1,
+                    0,
+                )
+            );
+            var o_date_first_day_of_month = new Date(
+                Date.UTC(
+                    o_date.getUTCFullYear(),
+                    o_date.getUTCMonth(),
+                    1,
+                )
+            );
             var o_date_start = o_date_first_day_of_month;
             let n_ms__one_day = 24*60*60*1000;
-            while(o_date_start.getDay() != 1){
+            while(o_date_start.getUTCDay() != 1){
                 o_date_start = new Date(o_date_start.getTime()-n_ms__one_day)
             }
 
             var o_date_end = o_date_last_day_of_month;
-            while(o_date_end.getDay() != 0){
+            while(o_date_end.getUTCDay() != 0){
                 o_date_end = new Date(o_date_end.getTime()+n_ms__one_day)
             }
             var a_o_date_day = [];
@@ -266,7 +278,7 @@ let f_o_js__datepicker = function(
                         a_o: [
                             ...a_o_date_day.map(function(o_date_day){
                                 var b_selectable = o_state.f_b_selectable(o_date_day);
-                                var b_day_of_this_month = o_date_day.getMonth() == o_state._o_date__being_selected.getMonth();
+                                var b_day_of_this_month = o_date_day.getUTCMonth() == o_state._o_date__being_selected.getUTCMonth();
                                 let b_same_day = f_b_same_day(o_date_day, o_state.o_date);
                                 let b_clickable = b_day_of_this_month && b_selectable;
                                 let b_clicked = b_same_day;
@@ -278,7 +290,7 @@ let f_o_js__datepicker = function(
                                         ((b_clickable) ? 'clickable' : ''), 
                                         ((b_clicked) ? 'clicked' : ''), 
                                     ].join(" "),
-                                    innerText: (b_day_of_this_month) ? o_date_day.getDate(): '',//.toString().padStart(2,'0'), 
+                                    innerText: (b_day_of_this_month) ? o_date_day.getUTCDate(): '',//.toString().padStart(2,'0'), 
                                     onclick: function(){
                                         if(!b_day_of_this_month){
                                             return
@@ -317,10 +329,10 @@ let f_o_js__datepicker = function(
                     ...o_state.a_s_name_month.map(
                         function(s_name_month){
                             var n_idx_month = o_state.a_s_name_month.indexOf(s_name_month);
-                            var o_date_month = new Date(new Date().setMonth(n_idx_month));
+                            var o_date_month = new Date(new Date().setUTCMonth(n_idx_month));
 
                             var b_selectable = true;//we would need to check every day of month if it is selectable, if even one day is selectable the whole month is selectable //o_state.f_b_selectable(o_date_month);
-                            let b_same_month = o_state.o_date.getMonth() == o_date_month.getMonth();
+                            let b_same_month = o_state.o_date.getUTCMonth() == o_date_month.getUTCMonth();
                             let b_clickable = b_selectable;
                             let b_clicked = b_same_month;
 
@@ -336,7 +348,7 @@ let f_o_js__datepicker = function(
                                 innerText: s_name_month,
                                 onclick: function(){
                                     o_state._o_date__being_selected = new Date(
-                                        o_state._o_date__being_selected.setMonth(n_idx_month)
+                                        o_state._o_date__being_selected.setUTCMonth(n_idx_month)
                                     );
 
                                     o_js_active = o_js_a_s_name_day;
@@ -359,7 +371,7 @@ let f_o_js__datepicker = function(
                     ...o_state.a_n_year.map(
                         function(n_year){
                             
-                            var b_selectable = true;//n_year == o_state.o_date.getFullYear()
+                            var b_selectable = true;//n_year == o_state.o_date.getUTCFullYear()
                             //we would need to check if the date is selectable for every day in the year to know if a year is selectable/clickable
 
                             let b_clickable = b_selectable;
@@ -378,7 +390,7 @@ let f_o_js__datepicker = function(
                                 innerText: n_year,
                                 onclick: function(){
                                     o_state._o_date__being_selected = new Date(
-                                        o_state._o_date__being_selected.setFullYear(n_year)
+                                        o_state._o_date__being_selected.setUTCFullYear(n_year)
                                     );
                                     o_js_active = o_js_a_s_name_day;
                                     o_js_s_name_month_n_year._f_render();
@@ -411,8 +423,8 @@ let f_o_js__datepicker = function(
                                         innerText: "<", 
                                         onclick: function(){
                                             o_state._o_date__being_selected = new Date(
-                                                o_state._o_date__being_selected.setMonth(
-                                                    o_state._o_date__being_selected.getMonth()-1
+                                                o_state._o_date__being_selected.setUTCMonth(
+                                                    o_state._o_date__being_selected.getUTCMonth()-1
                                                 )
                                             );
                                             o_js_s_name_month_n_year._f_render()
@@ -424,7 +436,7 @@ let f_o_js__datepicker = function(
                                             'p-1_2_rem',
                                             'clickable'
                                         ].join(' '),
-                                        innerText: o_state.a_s_name_month[o_state._o_date__being_selected.getMonth()].substring(0,3), 
+                                        innerText: o_state.a_s_name_month[o_state._o_date__being_selected.getUTCMonth()].substring(0,3), 
                                         onclick: function(){
                                             //switch to monmth view
                                             o_js_active = o_js_a_s_name_month
@@ -441,8 +453,8 @@ let f_o_js__datepicker = function(
                                         innerText: ">", 
                                         onclick: function(){
                                             o_state._o_date__being_selected = new Date(
-                                                o_state._o_date__being_selected.setMonth(
-                                                    o_state._o_date__being_selected.getMonth()+1
+                                                o_state._o_date__being_selected.setUTCMonth(
+                                                    o_state._o_date__being_selected.getUTCMonth()+1
                                                 )
                                             );
                                             o_js_s_name_month_n_year._f_render()
@@ -453,7 +465,7 @@ let f_o_js__datepicker = function(
                                             'p-1_2_rem',
                                             'clickable'
                                         ].join(' '),
-                                        innerText: o_state._o_date__being_selected.getFullYear(), 
+                                        innerText: o_state._o_date__being_selected.getUTCFullYear(), 
                                         onclick: function(){
                                             //switch to year view
                                             o_js_active = o_js_a_n_year
