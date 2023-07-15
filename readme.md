@@ -1,4 +1,9 @@
-<!-- {"s_msg":"this file was automatically generated","s_by":"f_generate_markdown.module.js","s_ts_created":"Wed May 24 2023 14:50:09 GMT+0200 (Central European Summer Time)","n_ts_created":1684932609498} -->
+<!-- {"s_msg":"this file was automatically generated","s_by":"f_generate_markdown.module.js","s_ts_created":"Sat Jul 15 2023 16:43:56 GMT+0200 (Central European Summer Time)","n_ts_created":1689432236832} -->
+```javascript
+import {
+    f_s_ymd_hms__from_n_ts_ms_utc
+} from "https://deno.land/x/date_functions@0.9/mod.js"
+```
 # import lib
 ```javascript
             import {
@@ -15,10 +20,11 @@
             let f_on_update__o_date = function(
                 o_date
                 ){
+                console.log(f_s_ymd_hms__from_n_ts_ms_utc(this.o_date.getTime(), 'UTC'))
                 // this function is called when the date has been updated
                 console.log("a new date has been selected!")
-                        console.log(this.o_date);// date is in 'this'
-                        console.log(o_date)//date is also first argument of functiond
+                console.log(this.o_date);// date is in 'this'
+                console.log(o_date)//date is also first argument of functiond
             }
             let f_b_selectable__date = function(
                 o_date
@@ -42,6 +48,7 @@
                 new O_state(
                     o_div_target,//o_element_html,
                     new Date(),//o_date,
+                    null,
                     f_on_update__o_date,
                     f_b_selectable__date,
                     f_on_click__o_date
@@ -60,6 +67,7 @@
                 new O_state(
                     document.querySelector("#datepicker_from_to_example"),//o_element_html,
                     o_date,
+                    null, 
                     function(){
                         console.log("a new date has been selected!")
                         console.log(this.o_date);
@@ -80,6 +88,7 @@
                 new O_state(
                     o_div,
                     o_date,
+                    null, 
                     function(){
                         console.log("a new date has been selected!")
                         console.log(this.o_date);
@@ -99,6 +108,7 @@ var o_div = document.createElement("div");
                 new O_state(
                     o_div,
                     o_date,
+                    null,
                     function(){
                         console.log("a new date has been selected!")
                         console.log(this.o_date);
@@ -122,6 +132,7 @@ var o_div = document.createElement("div");
                 new O_state(
                     o_div,
                     o_date,
+                    null,
                     function(){
                         console.log("a new date has been selected!")
                         console.log(this.o_date);
@@ -145,6 +156,7 @@ var o_div = document.createElement("div");
                 new O_state(
                     o_div,
                     o_date,
+                    null, 
                     function(){
                         console.log("a new date has been selected!")
                         console.log(this.o_date);
@@ -169,6 +181,36 @@ document.body.appendChild(o_div)
                 new O_state(
                     o_div,
                     o_date,
+                    null, 
+                    function(){
+                        console.log("a new date has been selected!")
+                        console.log(this.o_date);
+                    },//f_on_update__o_date
+                    function(o_date){
+                        return true;
+                    }, 
+                    function(){}, 
+                    new Date().getTime(),//n_ts_ms__from, 
+                    new Date().getTime()+24*60*60*1000*(100000)//n_ts_ms__to
+                )
+            );
+            
+```
+# example: date string as input value
+```javascript
+
+var o_div = document.createElement("div");
+document.body.appendChild(o_div)
+            let o_js__datepicker_8 = f_o_js__datepicker(
+                new O_state(
+                    o_div,
+                    o_date,
+                    (o_state)=>{
+                        if(!o_state.b_date_updated_first_time){
+                            return 'Select date'
+                        }
+                        return o_state.o_date.toString().split(' ').slice(0, 4).join(' ')
+                    }, 
                     function(){
                         console.log("a new date has been selected!")
                         console.log(this.o_date);

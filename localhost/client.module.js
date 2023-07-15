@@ -26,25 +26,43 @@ let f_f_b_selectable__between_dates = function(
         return o_date.getTime() > o_date_from.getTime()
         && o_date.getTime() < o_date_to.getTime()
     }
-
-
+}
+let f_f_s_value_input__prompt_before_first_select = function(
+    s_text
+){
+    return (o_state) =>{
+        if(!o_state.b_date_updated_first_time){
+            return s_text
+        }
+        return f_s_ymd_from_n_ts_ms(
+            o_state?.o_date?.getTime(), 
+            true
+        )
+    }
 }
 class O_state{
     constructor(
         o_element_html,
         o_date = new Date(),
+        f_s_value_input,
         f_on_update__o_date = function(){},
         f_b_selectable = function(){return true},
         f_on_click__o_date = function(){return true},
         n_ts_ms__from = null, 
         n_ts_ms__to = null, 
     ){
+        if(!f_s_value_input){
+            f_s_value_input = f_f_s_value_input__prompt_before_first_select('Select date')
+        }
         if(o_element_html instanceof HTMLElement == false){
             throw new Error('type error');
         }
         if(o_date instanceof Date == false){
             throw new Error('type error');
         }
+        // if(typeof f_s_value_input != 'function'){
+        //     throw new Error('type error');
+        // }
         if(typeof f_on_update__o_date != 'function'){
             throw new Error('type error');
         }
@@ -54,7 +72,7 @@ class O_state{
         if(typeof f_on_click__o_date != 'function'){
             throw new Error('type error');
         }
-
+        this.b_date_updated_first_time = false;
         this.o_element_html = o_element_html
         this.o_date = o_date
         this.f_on_update__o_date = f_on_update__o_date
@@ -64,7 +82,8 @@ class O_state{
         this.n_ts_ms__from = n_ts_ms__from
         this.n_ts_ms__to = n_ts_ms__to
 
-
+        this.f_s_value_input = f_s_value_input
+        
         this._o_date__being_selected = new Date(this.o_date.getTime());
 
         this.s_poor_unique_id = `poor_uuid_${new Date().getTime()}_${parseInt(Math.random()*1000)}_${window.performance.now().toString().replace(".", "_")}`;
@@ -197,10 +216,7 @@ let f_o_js__datepicker = function(
                         readonly: 'true',
                         class: "clickable p-1_2_rem",
                         type: "text",
-                        value:  f_s_ymd_from_n_ts_ms(
-                            o_state.o_date.getTime(), 
-                            true
-                        ), 
+                        value: o_state.f_s_value_input(o_state),
                         onmousedown: function(){
                             o_state.b_show_picker = true
                             o_js_s_name_month_n_year._f_render();
@@ -306,9 +322,10 @@ let f_o_js__datepicker = function(
                                         o_js_a_s_name_day._f_render();
                                         if(b_selectable){
                                             o_state.o_date = new Date(o_date_day.getTime())
+                                            o_state.b_date_updated_first_time = true;
                                             o_state.f_on_update__o_date(
                                                 o_state.o_date
-                                                );
+                                            );
                                             o_state.b_show_picker = false;
                                             o_js_s_name_month_n_year._f_render();
                                         }
