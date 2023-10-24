@@ -4,7 +4,7 @@ var o_webserver_config = {
   },
   o_not_encrypted:{        
       s_host: "::", // '::' = allow ipv4 and ipv6
-      n_port: 8088,
+      n_port: 8188,
       s_url: "http://localhost:${o_not_encrypted.n_port}/"
   },
   o_encrypted: {

@@ -434,6 +434,7 @@ let f_o_js__datepicker = function(
                             //we would need to check if the date is selectable for every day in the year to know if a year is selectable/clickable
 
                             let b_clickable = b_selectable;
+                            var o_date_year = new Date(new Date().setUTCFullYear(n_year));
                             let b_clicked = o_date_year.getFullYear() == o_state._o_date__being_selected.getFullYear();
 
                             return {
